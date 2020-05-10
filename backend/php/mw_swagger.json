@@ -1,0 +1,471 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "以類似迪士尼樂園/環球影城主題樂園的「遊園人數預估統計」概念，提供全台灣景點的預約出遊人數統計資料。<br/><br/>不同於 1968 app 以中華電信客戶的手機訊號做當日的統計，此系列的 Open API 提供使用者自己登錄資料，那一天打算要去那一個景點。<Br/><BR/>Open Data 觀光局 景點 https://data.gov.tw/dataset/7777<br/><br/>景點資料來源：https://gis.taiwan.net.tw/XMLReleaseALL_public/scenic_spot_C_f.json",
+    "version": "1.0.0",
+    "title": "我行我數",
+    "contact": {
+      "email": "antijava.ithelp@gmail.com"
+    }
+  },
+  "tags": [
+    {
+      "name": "查詢",
+      "description": "查詢相關 api",
+      "externalDocs": {
+        "description": "Find out more",
+        "url": "http://swagger.io"
+      }
+    },
+    {
+      "name": "新增",
+      "description": "預約日期及人數 api"
+    }
+  ],
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "paths": {
+    "/mw_qryspt01.php": {
+      "get": {
+        "tags": [
+          "查詢"
+        ],
+        "summary": "查詢單一景點資訊",
+        "description": "回傳單一景點資訊",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "apikey",
+            "in": "path",
+            "description": "由後台提供的 api key",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "景點 id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "schema": {
+              "$ref": "#/definitions/Spot"
+            }
+          }
+        }
+      }
+    },
+    "/mw_qryspt02.php": {
+      "get": {
+        "tags": [
+          "查詢"
+        ],
+        "summary": "查詢單一縣市景點資訊",
+        "description": "查詢單一縣市景點資訊",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "apikey",
+            "in": "path",
+            "description": "由後台提供的 api key",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "region",
+            "in": "path",
+            "description": "縣市名稱",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "宜蘭縣",
+              "花蓮縣",
+              "金門縣",
+              "南投縣",
+              "屏東縣",
+              "苗栗縣",
+              "桃園市",
+              "高雄市",
+              "基隆市",
+              "連江縣",
+              "雲林縣",
+              "新北市",
+              "新竹市",
+              "新竹縣",
+              "嘉義市",
+              "嘉義縣",
+              "彰化縣",
+              "臺中市",
+              "臺北市",
+              "臺東縣",
+              "臺南市",
+              "澎湖縣"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "schema": {
+              "$ref": "#/definitions/Spots"
+            }
+          }
+        }
+      }
+    },
+    "/mw_qrycnt01.php": {
+      "get": {
+        "tags": [
+          "查詢"
+        ],
+        "summary": "查詢單一縣市單一日期人數資訊",
+        "description": "查詢單一縣市單一日期人數資訊",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "apikey",
+            "in": "path",
+            "description": "由後台提供的 api key",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "region",
+            "in": "path",
+            "description": "縣市名稱",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "宜蘭縣",
+              "花蓮縣",
+              "金門縣",
+              "南投縣",
+              "屏東縣",
+              "苗栗縣",
+              "桃園市",
+              "高雄市",
+              "基隆市",
+              "連江縣",
+              "雲林縣",
+              "新北市",
+              "新竹市",
+              "新竹縣",
+              "嘉義市",
+              "嘉義縣",
+              "彰化縣",
+              "臺中市",
+              "臺北市",
+              "臺東縣",
+              "臺南市",
+              "澎湖縣"
+            ]
+          },
+          {
+            "name": "date",
+            "in": "path",
+            "description": "日期，格式為 yyyymmdd，例：20200509",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "schema": {
+              "$ref": "#/definitions/SpotCounts"
+            }
+          }
+        }
+      }
+    },
+    "/mw_qrycnt02.php": {
+      "get": {
+        "tags": [
+          "查詢"
+        ],
+        "summary": "查詢單一景點單一日期人數資訊",
+        "description": "查詢單一景點單一日期人數資訊",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "apikey",
+            "in": "path",
+            "description": "由後台提供的 api key",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "景點 id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "date",
+            "in": "path",
+            "description": "日期，格式為 yyyymmdd，例：20200509",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "schema": {
+              "$ref": "#/definitions/SpotCount"
+            }
+          }
+        }
+      }
+    },
+    "/mw_qrycnt03.php": {
+      "get": {
+        "tags": [
+          "查詢"
+        ],
+        "summary": "查詢單一景點單整個月份人數資訊",
+        "description": "查詢單一景點整個月份人數資訊",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "apikey",
+            "in": "path",
+            "description": "由後台提供的 api key",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "景點 id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "yyyymm",
+            "in": "path",
+            "description": "月份，格式為 yyyymm，例：202005",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "schema": {
+              "$ref": "#/definitions/DatedCounts"
+            }
+          }
+        }
+      }
+    },
+    "/mw_addcnt01.php": {
+      "get": {
+        "tags": [
+          "新增"
+        ],
+        "summary": "預約單一景點單一日期人數資訊",
+        "description": "預約單一景點單一日期人數資訊",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "apikey",
+            "in": "path",
+            "description": "由後台提供的 api key",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "景點 id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "date",
+            "in": "path",
+            "description": "日期，格式為 yyyymmdd，例：20200509",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "count",
+            "in": "path",
+            "description": "人數",
+            "required": true,
+            "type": "integer",
+            "enum": [
+              1,
+              2,
+              3,
+              4
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Spots": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Spot"
+      }
+    },
+    "Spot": {
+      "type": "object",
+      "required": [
+        "i",
+        "n"
+      ],
+      "properties": {
+        "i": {
+          "type": "string",
+          "description": "景點 id",
+          "example": "C1_315081500H_000009"
+        },
+        "n": {
+          "type": "string",
+          "example": "福德水車公園生態園區"
+        },
+        "a": {
+          "type": "string",
+          "example": "新北市三芝區三芝遊客中心旁(三芝遊客中心地址:臺北縣三芝區埔坪里埔頭坑164-2號)"
+        },
+        "z": {
+          "type": "string",
+          "description": "郵遞區號",
+          "example": "100"
+        },
+        "r": {
+          "type": "string",
+          "description": "縣市",
+          "example": "高雄市"
+        },
+        "t": {
+          "type": "string",
+          "description": "鄉鎮",
+          "example": "大樹鄉"
+        },
+        "x": {
+          "type": "integer",
+          "description": "經度",
+          "example": 121.50617
+        },
+        "y": {
+          "type": "integer",
+          "description": "緯度",
+          "example": 25.24749
+        }
+      }
+    },
+    "SpotCounts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SpotCount"
+      }
+    },
+    "SpotCount": {
+      "type": "object",
+      "required": [
+        "i",
+        "n"
+      ],
+      "properties": {
+        "i": {
+          "type": "string",
+          "description": "景點 id",
+          "example": "C1_315081500H_000009"
+        },
+        "n": {
+          "type": "string",
+          "example": "福德水車公園生態園區"
+        },
+        "a": {
+          "type": "string",
+          "example": "新北市三芝區三芝遊客中心旁(三芝遊客中心地址:臺北縣三芝區埔坪里埔頭坑164-2號)"
+        },
+        "z": {
+          "type": "string",
+          "description": "郵遞區號",
+          "example": "100"
+        },
+        "r": {
+          "type": "string",
+          "description": "縣市",
+          "example": "高雄市"
+        },
+        "t": {
+          "type": "string",
+          "description": "鄉鎮",
+          "example": "大樹鄉"
+        },
+        "x": {
+          "type": "integer",
+          "description": "經度",
+          "example": 121.50617
+        },
+        "y": {
+          "type": "integer",
+          "description": "緯度",
+          "example": 25.24749
+        },
+        "c": {
+          "type": "integer",
+          "description": "人數統計",
+          "example": 10240
+        }
+      }
+    },
+    "DatedCounts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DatedCount"
+      }
+    },
+    "DatedCount": {
+      "type": "object",
+      "required": [
+        "d",
+        "n"
+      ],
+      "properties": {
+        "d": {
+          "type": "string",
+          "description": "日期",
+          "example": 20200509
+        },
+        "c": {
+          "type": "string",
+          "description": "人數",
+          "example": 5120
+        }
+      }
+    }
+  }
+}
