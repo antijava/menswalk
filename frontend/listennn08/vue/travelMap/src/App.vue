@@ -1,5 +1,6 @@
 <template>
     <div id="app">
+        <icon-tag />
         <nav-Component :collapse="collapseFn" />
         <search-and-insert @returnMapData="getMapData" :collapse="collapseFn" />
         <main-map :passdata="mapData" />
@@ -10,6 +11,7 @@
 import MainMap from './components/MainMap'
 import SearchAndInsert from './components/searchAndInsert'
 import navComponent from './components/nav'
+import IconTag from './components/IconTag'
 
 import jQuery from 'jquery';
 import "bootstrap";
@@ -18,9 +20,10 @@ import "bootstrap/dist/css/bootstrap.css";
 export default {
     name: 'App',
     components: {
+        IconTag,
         navComponent,
         MainMap,
-        SearchAndInsert
+        SearchAndInsert,
     },
     data () {
         return {
@@ -64,7 +67,7 @@ export default {
     .MainMap {
         float: right;
         width: 100%;
-        height: 60%;
+        height: 100%;
         transition: width .5s;
     }
     .MainMap.open {
@@ -191,7 +194,11 @@ export default {
     height: 100vh;
     color: #2c3e50;
 }
-
+#IconTag {
+    position: fixed;
+    float: right;
+    z-index: 9999;
+}
 #nav {
     position: fixed;
     z-index: 9999;

@@ -228,6 +228,7 @@ export default {
             // console.log(this.selectSight)
         },
         selectCounty() {
+            this.selectSight = null;
             // this.selectInsertSights = null;
             // console.log(this.selectCounty);
         },
@@ -267,12 +268,14 @@ export default {
     },
     computed: {
         sightsOptions() {
-            let returnData = this
-                .responseData
-                .filter(el => el.Region == this.selectCounty);
-            return this.selectCounty == null
-                ? this.responseData
-                : returnData;
+            // let returnData = this.responseData.filter(el => el.Region == this.selectCounty);
+            // return this.selectCounty == null
+                // ? this.responseData
+                // : returnData;
+            this.selectSearchType = this.searchType[1].url;
+            //TODO: edit options get
+            return this.selectCounty == null ? null : this.getApi()
+
         },
         showMark() {
             return jQuery(window).width() > 500 ? true : false;
@@ -284,8 +287,10 @@ export default {
             let obj = {
                 apikey: 'listennn08776b216a1db5916031137c'
             };
-            // let url = `${cors}http://menswalk.prjlife.com/${this.selectSearchType}?apikey=${obj.apikey}`
-            let url = `$http://menswalk.prjlife.com/${this.selectSearchType}?apikey=${obj.apikey}`
+            let url = `http://menswalk.prjlife.com/${this.selectSearchType}?apikey=${obj.apikey}`
+            let testUrl = "https://menswalk.prjlife.com/mw_qrycnt03.php?apikey=listennn08776b216a1db5916031137c&id=C1_315081500H_000009&yyyymm=202005"
+            // url = `${cors}${url}`
+            url = `${cors}${testUrl}`
             switch (this.selectSearchType) {
                 case 'mw_qryspt01.php':
                     obj.id = this.selectSight;
@@ -314,7 +319,10 @@ export default {
             // console.log(`${cors}http://menswalk.prjlife.com/${this.selectSearchType}`)
 
 			axios.get(url)
-                .then((result) =>  result.data)
+                .then((result) => {
+                    console.log(result)
+                    return result.data
+                })
                 .then((data) => {
                     this.returnData = [];
                     data.forEach(element => {
@@ -328,20 +336,20 @@ export default {
                         })
                     });
                 })
-                .then(async() => {
+                .then(() => {
                     this.passObj = {
                         data: this.returnData,
                         type: this.selectSearchType,
                         region: this.county.filter( (el) => el.name == this.selectCounty)[0],
                         date: moment(this.date).format('YYYYMM')
                     }
-                    await this.$emit('returnMapData', this.passObj)
+                    this.$emit('returnMapData', this.passObj)
                 })
         },
-        async insertApi() {
+        insertApi() {
             let cors = 'https://cors-anywhere.herokuapp.com/';
             let url = 'http://menswalk.prjlife.com/';
-            // url = `${cors}${url}`
+            url = `${cors}${url}`
             let obj = {
                 apikey: 'listennn08776b216a1db5916031137c',
                 // id: this.selectSight,
@@ -349,7 +357,13 @@ export default {
                 count: this.peopleNum
             }
             axios.all(this.selectInsertSights.map((el, index) => {
-                return axios.get(`${url}${this.selectSearchType}?apikey=${obj.apikey}&id=${el.Id}&date=${obj.date}&count=${obj.count}`)
+                return  // axios.get(`${url}${this.selectSearchType}?apikey=${obj.apikey}&id=${el.Id}&date=${obj.date}&count=${obj.count}`)
+                axios.post(url, {
+                    apikey: obj.apikey,
+                    id: el.Id,
+                    date: obj.date,
+                    count: obj.count
+                })
                     .then((result) => {
                 //     console.log(result)
                 //     if (result.status == 200) {
@@ -418,7 +432,7 @@ export default {
                     alert('Error');
 
             }
-            this.collapse();
+            if (this.selectSearchType != 'mw_qrycnt_03.php') this.collapse();
         },
         passDataToMap() {
             arguments[0].forEach((el) => {
