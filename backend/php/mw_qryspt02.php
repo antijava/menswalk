@@ -80,7 +80,7 @@ die();
 function doQuery($region) {
 	global $link;
 
-	$sql = "SELECT id i,name n, address a, zipcode z, region r, town t, px x, py y FROM mw_scenic_spot WHERE region=?";
+	$sql = "SELECT id i,name n, address a, zipcode z, region r, town t, px x, py y FROM mw_scenic_spot WHERE region=? ORDER BY name";
 	$statement = $link->prepare($sql);
 	$statement->bind_param('s', $region);
 	$statement->execute();
