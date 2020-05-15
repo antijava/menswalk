@@ -86,7 +86,8 @@ FROM mw_mencount_detail B
 WHERE B.id = A.id
 AND B.cdate = ?),0) c
 FROM mw_scenic_spot A
-WHERE A.region=?";
+WHERE A.region=?
+ORDER BY A.name";
 	$statement = $link->prepare($sql);
 	$statement->bind_param('ss', $qdate, $region);
 	$statement->execute();
