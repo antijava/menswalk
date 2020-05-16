@@ -27,17 +27,10 @@ mysqli_query ($link, "SET NAMES 'utf8'");
 
 //----------- Usage ----------------------
 //http://menswalk.prjlife.com/mw_addcnt01.php?apikey=cat&id=C1_315081500H_000009&date=20200504&count=4
-if (isset($_POST['apikey'])) {
-	$apikey = $_POST["apikey"];
-	$aid = $_POST["id"];
-	$adate = $_POST["date"];
-	$acount = $_POST["count"];
-} else {
-	$apikey = $_GET["apikey"];
-	$aid = $_GET["id"];
-	$adate = $_GET["date"];
-	$acount = $_GET["count"];
-}
+$apikey = $_POST["apikey"];
+$aid = $_POST["id"];
+$adate = $_POST["date"];
+$acount = $_POST["count"];
 
 //------ Global variables
 $arrCount = array(1, 2, 3, 4);
