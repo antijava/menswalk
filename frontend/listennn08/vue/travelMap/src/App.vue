@@ -46,6 +46,7 @@ export default {
         collapse() {
             jQuery('#searchAndInsert').toggleClass('open');
             jQuery('#map').toggleClass('open');
+            jQuery('#icon-tag').toggleClass('open');
         }
     }
 }
@@ -72,9 +73,18 @@ export default {
     }
     .MainMap.open {
         width: 60%;
+        
+    }
+    .icon-tag {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    .icon-tag.open {
+        transform: translateX(-10%);
+        transition: transform .5s;
     }
 }
-@media screen and (max-width: 1024px) and (min-width: 960px){
+@media screen and (max-width: 1024px) and (min-width: 960px) {
     .searchAndInsert {
         float: top;
         top: 2%;
@@ -94,8 +104,12 @@ export default {
     .MainMap.open {
         margin-top: 50%;
     }
+    .icon-tag {
+        width: 100%;
+        text-align: center;
+    }
 }
-@media screen and (max-width: 960px) {
+@media screen and (max-width: 960px) and (min-width: 761px) {
      .searchAndInsert {
         float: top;
         top: 1%;
@@ -115,8 +129,15 @@ export default {
     .MainMap.open {
         margin-top: calc(75% - 8vw);
     }
+    .icon-tag {
+        right: 0;
+        text-align: center;
+        width: 100%;
+        height: 2%;
+        /* transform: translateX(-100%); */
+    }
 }
-@media screen and (max-width: 760px) {
+@media screen and (max-width: 760px) and (min-width: 641px){
      .searchAndInsert {
         float: top;
         top: 1%;
@@ -136,8 +157,14 @@ export default {
     .MainMap.open {
         margin-top: 80%;
     }
+    .icon-tag {
+        right: 50;
+        text-align: left;
+        width: 80%;
+        /* transform: translateX(-100%); */
+    }
 }
-@media screen and (max-width: 640px) {
+@media screen and (max-width: 640px) and (min-width: 501px) {
      .searchAndInsert {
         float: top;
         top: 0;
@@ -158,28 +185,68 @@ export default {
         margin-top: 100% ;
     }
 }
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 500px) and (min-width: 401px) {
     .searchAndInsert.open {
         height: 70%;
     }
     .MainMap.open {
         margin-top: 120% ;
     }
+    .icon-tag {
+        bottom: 60px;
+        right: 0;   
+        width: 43%;
+        height: 10%;
+    }
+    #icon-tag .img-block img {
+        width: 15px;
+    }
+    #icon-tag .img-block .small  {
+        font-size: 16px;
+    }
 }
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 400px) and (min-width: 321px) {
+    .searchAndInsert {
+        float: top;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 0;
+        transition: height .5s;
+    }
     .searchAndInsert.open {
         height: 80%;
     }
     .MainMap.open {
         margin-top: 135% ;
     }
+    .icon-tag {
+        bottom: 10px;
+        right: 0;   
+        width: 55%;
+        height: 10%;
+    }
 }
 @media screen and (max-width: 320px) {
+    .searchAndInsert {
+        float: top;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 0;
+        transition: height .5s;
+    }
     .searchAndInsert.open {
         height: 90%;
     }
     .MainMap.open {
         margin-top: 150% ;
+    }
+    .icon-tag {
+        bottom: 10px;
+        right: 0;   
+        width: 60%;
+        height: 10%;
     }
 }
 * {
@@ -194,11 +261,12 @@ export default {
     height: 100vh;
     color: #2c3e50;
 }
-#IconTag {
+.icon-tag {
     position: fixed;
-    float: right;
     z-index: 9999;
+    transition: transform .5s;
 }
+
 #nav {
     position: fixed;
     z-index: 9999;
