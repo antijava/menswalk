@@ -42,7 +42,6 @@ export default {
             data: [],
             zoom: 13,
             center: [22.612961, 120.304167],
-            userloc: null,
             url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
             attribution: `© <a href="http://osm.org/copyright">OpenStreetMap</a> contributors`,
             options: {
@@ -102,15 +101,13 @@ export default {
     },
     methods: {
         iconUrl(num) {
-            return num > 25000
-                        ? this.icon.type.purple
-                        : num > 20000
-                            ? this.icon.type.red
-                            : num > 15000
-                                ? this.icon.type.orange
-                                : num > 10000
-                                    ? this.icon.type.yellow
-                                    : this.icon.type.green;
+            return num > 20000
+                        ? this.icon.type.red
+                        : num > 15000
+                            ? this.icon.type.orange
+                            : num > 10000
+                                ? this.icon.type.yellow
+                                : this.icon.type.green;
         }
     },
     mounted() {
@@ -120,10 +117,9 @@ export default {
             navigator.geolocation.getCurrentPosition(position => {
                 const p = position.coords;
                 // 將中心點設為目前的位置
-                this.userloc = [p.latitude, p.longitude] ;
                 this.center = [p.latitude, p.longitude] ;
                 // 將目前的位置的標記點彈跳視窗打開
-                this.$refs.location.mapObject.openPopup();
+                // this.$refs.location.mapObject.openPopup();
             }, (error) => {
                 this.zoom = 12;
                 this.center = [24.05, 120.85];
