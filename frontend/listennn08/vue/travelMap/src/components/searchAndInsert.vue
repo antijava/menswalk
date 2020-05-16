@@ -41,6 +41,7 @@
                             option(v-for="item in sightsOptions" :value="item.Id") {{ item.Name }}
                         Multiselect(
                             v-model="selectInsertSights",
+                            v-if="selectCounty",
                             :options="sightsOptions"
                             :multiple="true",
                             placeholder="請選擇景點"
@@ -212,12 +213,22 @@ export default {
                     url: "mw_qrycnt03.php"
                 }
             ],
+            sightsOptions: [],
             selectCounty: null,
             selectSight: null,
             selectInsertSights: null,
             selectSearchType: 'mw_qryspt01.php',
             passObj: {},
             responseData: [],
+            connectObj: {
+                cors:  'https://cors-anywhere.herokuapp.com/',
+                url: 'http://menswalk.prjlife.com/',
+                apikey: 'listennn08776b216a1db5916031137c',
+                id: null,
+                region: null,
+                date: null,
+                count: null,
+            }
         }
     },
     watch: {
@@ -227,9 +238,23 @@ export default {
         selectSight() {
             // console.log(this.selectSight)
         },
-        selectCounty() {
+        async selectCounty() {
+            this.selectSight = null;
             // this.selectInsertSights = null;
             // console.log(this.selectCounty);
+            let url = `${ this.connectObj.url }mw_qryspt02.php?apikey=${ this.connectObj.apikey }&region=${ this.selectCounty }`;
+            // url = `${ this.connectObj.cors }${ url }` /* test url */
+            this.sightsOptions = await axios
+                        .get(url)
+                        .then(result => result.data)
+                        .then(data => {
+                            return data.map( (el) => {
+                                return {
+                                    Id: el.i,
+                                    Name: el.n
+                                }
+                            })
+                        })
         },
         selectInsertSights() {
             // console.log(this.selectInsertSights.map(el => el.Id))
@@ -251,6 +276,7 @@ export default {
                 // console.log(jsonData.XML_Head)
                 this.responseData = jsonData.XML_Head.Infos.Info
             })
+        this.sightsOptions;
            /* .then(() => {
                 this.passDataToMap(this.responseData.filter(el=> el.Region == "高雄市"))
             })*/
@@ -266,55 +292,48 @@ export default {
         });
     },
     computed: {
-        sightsOptions() {
-            let returnData = this
-                .responseData
-                .filter(el => el.Region == this.selectCounty);
-            return this.selectCounty == null
-                ? this.responseData
-                : returnData;
-        },
         showMark() {
             return jQuery(window).width() > 500 ? true : false;
         }
     },
     methods: {
         getApi() {
-			let cors = 'https://cors-anywhere.herokuapp.com/';
-            let obj = {
-                apikey: 'listennn08776b216a1db5916031137c'
-            };
-            // let url = `${cors}http://menswalk.prjlife.com/${this.selectSearchType}?apikey=${obj.apikey}`
-            let url = `$http://menswalk.prjlife.com/${this.selectSearchType}?apikey=${obj.apikey}`
+            // let url = `http://menswalk.prjlife.com/${this.selectSearchType}?apikey=${obj.apikey}`
+            // let testUrl = "https://menswalk.prjlife.com/mw_qrycnt03.php?apikey=listennn08776b216a1db5916031137c&id=C1_315081500H_000009&yyyymm=202005"
+            let url = `${this.connectObj.url}${this.selectSearchType}?apikey=${this.connectObj.apikey}`
+            // url = `${this.connectObj.cors}${url}` /* test url */
+            // url = `${this.connectObj.cors}${testUrl}`
             switch (this.selectSearchType) {
                 case 'mw_qryspt01.php':
-                    obj.id = this.selectSight;
-					url += `&id=${obj.id}`
+                    this.connectObj.id = this.selectSight;
+					url += `&id=${this.connectObj.id}`
                     break;
                 case 'mw_qryspt02.php':
-                    obj.region = this.selectCounty;
-					url += `&region=${obj.region}`
+                    this.connectObj.region = this.selectCounty;
+					url += `&region=${this.connectObj.region}`
                     break;
                 case 'mw_qrycnt01.php':
-                    obj.region = this.selectCounty;
-                    obj.date = moment(this.date).format('YYYYMMDD');
-					url += `&region=${obj.region}&date=${obj.date}`
+                    this.connectObj.region = this.selectCounty;
+                    this.connectObj.date = moment(this.date).format('YYYYMMDD');
+					url += `&region=${this.connectObj.region}&date=${this.connectObj.date}`
                     break;
                 case 'mw_qrycnt02.php':
-                    obj.id = this.selectSight;
-                    obj.date = moment(this.date).format('YYYYMMDD');
-					url += `&id=${obj.id}&date=${obj.date}`
+                    this.connectObj.id = this.selectSight;
+                    this.connectObj.date = moment(this.date).format('YYYYMMDD');
+					url += `&id=${this.connectObj.id}&date=${this.connectObj.date}`
                     break;
                 case 'mw_qrycnt03.php':
-                    obj.id = this.selectSight;
-                    obj.date = moment(this.date).format('YYYYMM');
-					url += `&id=${obj.id}&date=${obj.date}`
+                    this.connectObj.id = this.selectSight;
+                    this.connectObj.date = moment(this.date).format('YYYYMM');
+					url += `&id=${this.connectObj.id}&date=${this.connectObj.date}`
                     break;
             };
             // console.log(`${cors}http://menswalk.prjlife.com/${this.selectSearchType}`)
-
 			axios.get(url)
-                .then((result) =>  result.data)
+                .then((result) => {
+                    console.log(result)
+                    return result.data
+                })
                 .then((data) => {
                     this.returnData = [];
                     data.forEach(element => {
@@ -328,49 +347,45 @@ export default {
                         })
                     });
                 })
-                .then(async() => {
+                .then(() => {
                     this.passObj = {
                         data: this.returnData,
                         type: this.selectSearchType,
                         region: this.county.filter( (el) => el.name == this.selectCounty)[0],
                         date: moment(this.date).format('YYYYMM')
                     }
-                    await this.$emit('returnMapData', this.passObj)
+                    this.$emit('returnMapData', this.passObj)
                 })
         },
-        async insertApi() {
-            let cors = 'https://cors-anywhere.herokuapp.com/';
-            let url = 'http://menswalk.prjlife.com/';
-            // url = `${cors}${url}`
-            let obj = {
-                apikey: 'listennn08776b216a1db5916031137c',
-                // id: this.selectSight,
-                date: moment(this.date).format('YYYYMMDD'),
-                count: this.peopleNum
-            }
+        insertApi() {
+            let url = `${this.connectObj.url}`;
+            // url = `${this.connectObj.cors}${url}`; /* test url */
+            this.connectObj.date = moment(this.date).format('YYYYMMDD');
+            this.connectObj.count = this.peopleNum;
             axios.all(this.selectInsertSights.map((el, index) => {
-                return axios.get(`${url}${this.selectSearchType}?apikey=${obj.apikey}&id=${el.Id}&date=${obj.date}&count=${obj.count}`)
-                    .then((result) => {
-                //     console.log(result)
-                //     if (result.status == 200) {
-                //         alert('上傳資料成功');
-                //     }
-                        try {
-                            return {
-                                id: el.Id,
-                                status: result.status
+                return axios
+                        .post(url,
+                        {
+                            apikey: this.connectObj.apikey,
+                            id: el.Id,
+                            date: this.connectObj.date,
+                            count: this.connectObj.count
+                        })
+                        .then((result) => {
+                            try {
+                                return {
+                                    id: el.Id,
+                                    status: result.status
+                                }
+                            } catch (error) {
+                                return {
+                                    id: index,
+                                    status: error
+                                }
                             }
-                        } catch (error) {
-                            return {
-                                id: index,
-                                status: error
-                            }
-                        }
-
                     })
             })).then( (statusArray) => statusArray.filter(el => {
-                    if (el.status != 200) return el.id;
-
+                    if (el.status != 200) return el.id;    
             })).then( (errorArray) => {
                 if (!errorArray.length) {
                      alert('全部景點已上傳完成!')
@@ -418,7 +433,7 @@ export default {
                     alert('Error');
 
             }
-            this.collapse();
+            if (this.selectSearchType != 'mw_qrycnt_03.php') this.collapse();
         },
         passDataToMap() {
             arguments[0].forEach((el) => {

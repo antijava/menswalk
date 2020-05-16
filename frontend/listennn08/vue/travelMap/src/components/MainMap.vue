@@ -14,21 +14,15 @@
             l-marker(
                 ref="location"
                 :lat-lng="center"
-                v-if="userloc"
             )
                 l-popup 你的位置
-            l-marker(
-                ref="location"
-                :lat-lng="center"
-                v-if="!userloc"
-            )
             l-marker(
                 v-for="item in data"
                 :lat-lng="item.local"
                 :key="item.id"
             )
                 l-icon(
-                    :icon-url="item.count > 25000 ? icon.type.purple : item.count > 20000 ? icon.type.red : item.count > 15000 ? icon.type.orange : item.count > 10000 ? icon.type.yellow : icon.type.green"
+                    :icon-url="iconUrl(item.count)"
                     :shadow-url="icon.shdowUrl"
                     :icon-size="icon.iconSize"
                     :icon-anchor="icon.iconAnchor"
@@ -37,8 +31,8 @@
                 )
                 l-popup
                     h2 {{ item.name }}
-                    p(v-if="typeof item.count == 'number'") 預估觀光人數: {{ item.count }}
-                    p(v-if="typeof item.count == 'number' && passdata.type == 'mw_qrycnt03.php'") {{ passdata.date.substring(4)}}月預估觀光人數: {{ item.count }}
+                    p(v-if="typeof item.count == 'number'&& passdata.type != 'mw_qrycnt03.php'") 預估觀光人數: {{ item.count }}
+                    p(v-if="typeof item.count == 'number' && passdata.type == 'mw_qrycnt03.php'") {{ passdata.date.substring(4,2)}}月預估觀光人數: {{ item.count }}
 
 </template>
 <script>
@@ -48,7 +42,6 @@ export default {
             data: [],
             zoom: 13,
             center: [22.612961, 120.304167],
-            userloc: null,
             url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
             attribution: `© <a href="http://osm.org/copyright">OpenStreetMap</a> contributors`,
             options: {
@@ -99,11 +92,22 @@ export default {
                 this.center = this.passdata.data[0].local;
             } else if (this.passdata.type == "mw_qryspt02.php" || this.passdata.type == "mw_qrycnt01.php") {
                 this.zoom = 12;
-                console.log(this.passdata.region.local)
+                // console.log(this.passdata.region.local)
                 this.center = this.passdata.region.local || this.center;
             } else {
 
             }
+        }
+    },
+    methods: {
+        iconUrl(num) {
+            return num > 20000
+                        ? this.icon.type.red
+                        : num > 15000
+                            ? this.icon.type.orange
+                            : num > 10000
+                                ? this.icon.type.yellow
+                                : this.icon.type.green;
         }
     },
     mounted() {
@@ -113,10 +117,9 @@ export default {
             navigator.geolocation.getCurrentPosition(position => {
                 const p = position.coords;
                 // 將中心點設為目前的位置
-                this.userloc = [p.latitude, p.longitude] ;
                 this.center = [p.latitude, p.longitude] ;
                 // 將目前的位置的標記點彈跳視窗打開
-                this.$refs.location.mapObject.openPopup();
+                // this.$refs.location.mapObject.openPopup();
             }, (error) => {
                 this.zoom = 12;
                 this.center = [24.05, 120.85];
