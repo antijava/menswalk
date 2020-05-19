@@ -223,6 +223,7 @@ export default {
             connectObj: {
                 cors:  'https://cors-anywhere.herokuapp.com/',
                 url: 'http://menswalk.prjlife.com/',
+                urls: 'https://menswalk.prjlife.com/',
                 apikey: 'listennn08776b216a1db5916031137c',
                 id: null,
                 region: null,
@@ -298,9 +299,10 @@ export default {
     },
     methods: {
         getApi() {
-            // let url = `http://menswalk.prjlife.com/${this.selectSearchType}?apikey=${obj.apikey}`
             // let testUrl = "https://menswalk.prjlife.com/mw_qrycnt03.php?apikey=listennn08776b216a1db5916031137c&id=C1_315081500H_000009&yyyymm=202005"
-            let url = `${this.connectObj.url}${this.selectSearchType}?apikey=${this.connectObj.apikey}`
+            var currentUrl = window.location.href.split('://')[0].match('https')[0];
+            let url = (currentUrl == 'https') ? this.connectObj.urls : this.connectObj.url;
+            url = `${url}${this.selectSearchType}?apikey=${this.connectObj.apikey}`
             // url = `${this.connectObj.cors}${url}` /* test url */
             // url = `${this.connectObj.cors}${testUrl}`
             switch (this.selectSearchType) {
@@ -358,7 +360,8 @@ export default {
                 })
         },
         insertApi() {
-            let url = `${this.connectObj.url}`;
+            var currentUrl = window.location.href.split('://')[0].match('https')[0];
+            let url = (currentUrl == 'https') ? this.connectObj.urls : this.connectObj.url;
             // url = `${this.connectObj.cors}${url}`; /* test url */
             this.connectObj.date = moment(this.date).format('YYYYMMDD');
             this.connectObj.count = this.peopleNum;
@@ -385,7 +388,7 @@ export default {
                             }
                     })
             })).then( (statusArray) => statusArray.filter(el => {
-                    if (el.status != 200) return el.id;    
+                    if (el.status != 200) return el.id;
             })).then( (errorArray) => {
                 if (!errorArray.length) {
                      alert('全部景點已上傳完成!')
