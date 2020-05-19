@@ -296,7 +296,6 @@ export default {
     },
     methods: {
         getApi() {
-            console.log('in')
             // let testUrl = "https://menswalk.prjlife.com/mw_qrycnt03.php?apikey=listennn08776b216a1db5916031137c&id=C1_315081500H_000009&yyyymm=202005"
             let currentUrl = window.location.href.match('https');
             let url = (currentUrl) ? this.connectObj.urls : this.connectObj.url;
