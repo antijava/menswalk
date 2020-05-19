@@ -38,6 +38,14 @@ export default {
     },
     created() {
         this.collapseFn = this.collapse;
+        let curpath = window.location.href;
+
+        let href = !~curpath.indexOf('localhost')
+            ? !~curpath.indexOf('https')
+                ? ''
+                : curpath.replace(/http/,' https')
+            : '';
+        if (href) window.location.href = href;
     },
     methods: {
         getMapData() {
@@ -73,14 +81,14 @@ export default {
     }
     .MainMap.open {
         width: 60%;
-        
+
     }
     .icon-tag {
         left: 50%;
         transform: translateX(-50%);
     }
     .icon-tag.open {
-        transform: translateX(-10%);
+        transform: translateX(50%);
         transition: transform .5s;
     }
 }
@@ -194,7 +202,7 @@ export default {
     }
     .icon-tag {
         bottom: 60px;
-        right: 0;   
+        right: 0;
         width: 43%;
         height: 10%;
     }
@@ -222,7 +230,7 @@ export default {
     }
     .icon-tag {
         bottom: 10px;
-        right: 0;   
+        right: 0;
         width: 55%;
         height: 10%;
     }
@@ -244,7 +252,7 @@ export default {
     }
     .icon-tag {
         bottom: 10px;
-        right: 0;   
+        right: 0;
         width: 60%;
         height: 10%;
     }
