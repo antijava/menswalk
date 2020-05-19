@@ -244,7 +244,7 @@ export default {
             // this.selectInsertSights = null;
             // console.log(this.selectCounty);
             let url = `${ this.connectObj.url }mw_qryspt02.php?apikey=${ this.connectObj.apikey }&region=${ this.selectCounty }`;
-            // url = `${ this.connectObj.cors }${ url }` /* test url */
+            url = `${ this.connectObj.cors }${ url }` /* test url */
             this.sightsOptions = await axios
                         .get(url)
                         .then(result => result.data)
@@ -278,9 +278,6 @@ export default {
                 this.responseData = jsonData.XML_Head.Infos.Info
             })
         this.sightsOptions;
-           /* .then(() => {
-                this.passDataToMap(this.responseData.filter(el=> el.Region == "高雄市"))
-            })*/
     },
     mounted() {
         jQuery('#searchTab').on('click', function (e) {
@@ -299,11 +296,12 @@ export default {
     },
     methods: {
         getApi() {
+            console.log('in')
             // let testUrl = "https://menswalk.prjlife.com/mw_qrycnt03.php?apikey=listennn08776b216a1db5916031137c&id=C1_315081500H_000009&yyyymm=202005"
-            var currentUrl = window.location.href.split('://')[0].match('https')[0];
-            let url = (currentUrl == 'https') ? this.connectObj.urls : this.connectObj.url;
+            let currentUrl = window.location.href.match('https');
+            let url = (currentUrl) ? this.connectObj.urls : this.connectObj.url;
             url = `${url}${this.selectSearchType}?apikey=${this.connectObj.apikey}`
-            // url = `${this.connectObj.cors}${url}` /* test url */
+            url = `${this.connectObj.cors}${url}` /* test url */
             // url = `${this.connectObj.cors}${testUrl}`
             switch (this.selectSearchType) {
                 case 'mw_qryspt01.php':
@@ -360,8 +358,8 @@ export default {
                 })
         },
         insertApi() {
-            var currentUrl = window.location.href.split('://')[0].match('https')[0];
-            let url = (currentUrl == 'https') ? this.connectObj.urls : this.connectObj.url;
+            let currentUrl = window.location.href.match('https');
+            let url = (currentUrl) ? this.connectObj.urls : this.connectObj.url;
             // url = `${this.connectObj.cors}${url}`; /* test url */
             this.connectObj.date = moment(this.date).format('YYYYMMDD');
             this.connectObj.count = this.peopleNum;
