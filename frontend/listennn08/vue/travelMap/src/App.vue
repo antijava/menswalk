@@ -39,12 +39,14 @@ export default {
     created() {
         this.collapseFn = this.collapse;
         let curpath = window.location.href;
+        // let curpath = 'http://menswalk.prjlife.com/listennn08.html'
 
         let href = !~curpath.indexOf('localhost')
             ? !~curpath.indexOf('https')
-                ? ''
-                : curpath.replace(/http/,' https')
+                ? curpath.replace(/http/,' https')
+                : ''
             : '';
+    
         if (href) window.location.href = href;
     },
     methods: {
