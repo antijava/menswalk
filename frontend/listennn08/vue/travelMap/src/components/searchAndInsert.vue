@@ -243,7 +243,7 @@ export default {
             this.selectSight = null;
             // this.selectInsertSights = null;
             // console.log(this.selectCounty);
-            let url = `${ this.connectObj.url }mw_qryspt02.php?apikey=${ this.connectObj.apikey }&region=${ this.selectCounty }`;
+            let url = `${ this.connectObj.urls }mw_qryspt02.php?apikey=${ this.connectObj.apikey }&region=${ this.selectCounty }`;
             // url = `${ this.connectObj.cors }${ url }` /* test url */
             this.sightsOptions = await axios
                         .get(url)
