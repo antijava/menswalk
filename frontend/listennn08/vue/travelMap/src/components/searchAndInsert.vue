@@ -222,7 +222,6 @@ export default {
             responseData: [],
             connectObj: {
                 cors:  'https://cors-anywhere.herokuapp.com/',
-                url: 'http://menswalk.prjlife.com/',
                 urls: 'https://menswalk.prjlife.com/',
                 apikey: 'listennn08776b216a1db5916031137c',
                 id: null,
@@ -245,11 +244,11 @@ export default {
             // console.log(this.selectCounty);
             let url = `${ this.connectObj.urls }mw_qryspt02.php?apikey=${ this.connectObj.apikey }&region=${ this.selectCounty }`;
             // url = `${ this.connectObj.cors }${ url }` /* test url */
-            this.sightsOptions = await axios
+            if (this.selectCounty) this.sightsOptions = await axios
                         .get(url)
                         .then(result => result.data)
-                        .then(data => {
-                            return data.map( (el) => {
+                        .then(async data => {
+                            return await data.map( (el) => {
                                 return {
                                     Id: el.i,
                                     Name: el.n
@@ -267,7 +266,6 @@ export default {
         Multiselect
     },
     created() {
-        // let cors = 'https://cors-anywhere.herokuapp.com/';
         // let url = 'https://gis.taiwan.net.tw/XMLReleaseALL_public/scenic_spot_C_f.json';
         let url = './static/sightdata.json'
         axios
@@ -275,18 +273,18 @@ export default {
             .then((result) => result.data)
             .then((jsonData) => {
                 // console.log(jsonData.XML_Head)
-                this.responseData = jsonData.XML_Head.Infos.Info
+                this.responseData = jsonData.XML_Head.Infos.Info;
             })
         this.sightsOptions;
     },
     mounted() {
         jQuery('#searchTab').on('click', function (e) {
             e.preventDefault();
-            jQuery('a[href="#search"]').tab('show')
+            jQuery('a[href="#search"]').tab('show');
         });
         jQuery('#insertTab').on('click', function (e) {
             e.preventDefault();
-            jQuery('a[href="#insert"]').tab('show')
+            jQuery('a[href="#insert"]').tab('show');
         });
     },
     computed: {
@@ -296,9 +294,8 @@ export default {
     },
     methods: {
         getApi() {
-            let currentUrl = window.location.href.match('https');
-            let url = (currentUrl) ? this.connectObj.urls : this.connectObj.url;
-            url = `${url}${this.selectSearchType}?apikey=${this.connectObj.apikey}`
+            let url = this.connectObj.urls;
+            url = `${url}${this.selectSearchType}?apikey=${this.connectObj.apikey}`;
             // url = `${this.connectObj.cors}${url}` /* test url */
             switch (this.selectSearchType) {
                 case 'mw_qryspt01.php':
@@ -327,10 +324,7 @@ export default {
             };
             // console.log(`${cors}http://menswalk.prjlife.com/${this.selectSearchType}`)
 			axios.get(url)
-                .then((result) => {
-                    console.log(result)
-                    return result.data
-                })
+                .then((result) => result.data)
                 .then((data) => {
                     this.returnData = [];
                     data.forEach(element => {
@@ -355,35 +349,41 @@ export default {
                 })
         },
         insertApi() {
-            let currentUrl = window.location.href.match('https');
-            let url = (currentUrl) ? this.connectObj.urls : this.connectObj.url;
+            let url = this.connectObj.urls;
+            url = `${url}${this.selectSearchType}`
             // url = `${this.connectObj.cors}${url}`; /* test url */
-            this.connectObj.date = moment(this.date).format('YYYYMMDD');
-            this.connectObj.count = this.peopleNum;
+            let postFormData = new FormData();
+            // this.connectObj.date = moment(this.date).format('YYYYMMDD');
+            // this.connectObj.count = this.peopleNum;
+            postFormData.set('apikey', this.connectObj.apikey);
+            postFormData.set('date', moment(this.date).format('YYYYMMDD'));
+            postFormData.set('count', this.peopleNum);
             axios.all(this.selectInsertSights.map((el, index) => {
+                // this.connectObj.id = el.Id;
+                postFormData.set('id', el.Id);
                 return axios
-                        .post(url,
-                        {
-                            apikey: this.connectObj.apikey,
-                            id: el.Id,
-                            date: this.connectObj.date,
-                            count: this.connectObj.count
-                        })
+                        .post(
+                            url,
+                            postFormData,
+                            { 'Content-Type': 'multipart/form-data' }
+                        )
                         .then((result) => {
                             try {
                                 return {
                                     id: el.Id,
-                                    status: result.status
+                                    status: result.status,
+                                    data: result.data
                                 }
                             } catch (error) {
                                 return {
                                     id: index,
-                                    status: error
+                                    status: result.status,
+                                    data: result.data
                                 }
                             }
                     })
             })).then( (statusArray) => statusArray.filter(el => {
-                    if (el.status != 200) return el.id;
+                    if (el.status != 200 || el.data.indexOf('Invalid call.')!=-1) return el.id;
             })).then( (errorArray) => {
                 if (!errorArray.length) {
                      alert('全部景點已上傳完成!')
