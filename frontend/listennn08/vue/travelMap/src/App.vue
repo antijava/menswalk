@@ -68,7 +68,7 @@ export default {
 @media screen and (min-width: 1025px) {
     .searchAndInsert {
         float: left;
-        left: 5%;
+        left: 6%;
         width: 0;
         transition: width .5s;
     }
@@ -98,9 +98,10 @@ export default {
     .searchAndInsert {
         float: top;
         top: 2%;
-        left: 20%;
-        width: 60%;
+        left: 5%;
+        width: 50%;
         height: 0;
+        /* display: inline-block; */
         transition: height .5s;
     }
     .searchAndInsert.open {
@@ -117,6 +118,7 @@ export default {
     .icon-tag {
         width: 100%;
         text-align: center;
+        bottom: 0px;
     }
 }
 @media screen and (max-width: 960px) and (min-width: 761px) {
