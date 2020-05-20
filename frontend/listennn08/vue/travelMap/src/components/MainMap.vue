@@ -78,7 +78,7 @@ export default {
     },
     watch: {
         passdata: function () {
-            console.log(this.passdata)
+            // console.log(this.passdata)
             this.data = [];
             this.passdata.data.forEach( (el) => {
                 this.data.push({
