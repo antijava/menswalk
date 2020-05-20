@@ -296,12 +296,10 @@ export default {
     },
     methods: {
         getApi() {
-            // let testUrl = "https://menswalk.prjlife.com/mw_qrycnt03.php?apikey=listennn08776b216a1db5916031137c&id=C1_315081500H_000009&yyyymm=202005"
             let currentUrl = window.location.href.match('https');
             let url = (currentUrl) ? this.connectObj.urls : this.connectObj.url;
             url = `${url}${this.selectSearchType}?apikey=${this.connectObj.apikey}`
-            url = `${this.connectObj.cors}${url}` /* test url */
-            // url = `${this.connectObj.cors}${testUrl}`
+            // url = `${this.connectObj.cors}${url}` /* test url */
             switch (this.selectSearchType) {
                 case 'mw_qryspt01.php':
                     this.connectObj.id = this.selectSight;
