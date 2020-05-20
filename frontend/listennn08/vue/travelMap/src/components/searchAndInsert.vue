@@ -319,7 +319,7 @@ export default {
                 case 'mw_qrycnt03.php':
                     this.connectObj.id = this.selectSight;
                     this.connectObj.date = moment(this.date).format('YYYYMM');
-					url += `&id=${this.connectObj.id}&date=${this.connectObj.date}`
+					url += `&id=${this.connectObj.id}&yyyymm=${this.connectObj.date}`
                     break;
             };
             // console.log(`${cors}http://menswalk.prjlife.com/${this.selectSearchType}`)
@@ -396,7 +396,7 @@ export default {
                             }
                         })
                     })
-                    alert(`未上傳完成景點： ${sight.join(', ')}`)
+                    alert(`未上傳完成景點： ${sight.join(', ')}`);
                 }
             })
             this.selectCounty = null;
@@ -431,27 +431,20 @@ export default {
                     alert('Error');
 
             }
-            if (this.selectSearchType != 'mw_qrycnt_03.php') this.collapse();
-        },
-        passDataToMap() {
-            arguments[0].forEach((el) => {
-                this.returnData.push({
-                            id: el.Id,
-                            name: el.Name,
-                            add: el.Add,
-                            local: [el.Py, el.Px],
-                            count: Math.floor(Math.random() * 20000)
-                        })
-            })
-
-            this.$emit('returnMapData', { data: this.returnData, type: this.selectSearchType, region: this.selectCounty });
-            // this.$emit('test', arguments[0])
+            if (this.selectSearchType != 'mw_qrycnt_03.php') {
+                this.collapse();
+            }  else {
+                //TODO: add show calendar
+            }
         },
         cancel() {
             this.selectInsertSights = null;
             this.selectSight = null;
             this.selectCounty = null;
             this.collapse();
+        },
+        showCalendar() {
+            //TODO: add method
         }
     }
 }
