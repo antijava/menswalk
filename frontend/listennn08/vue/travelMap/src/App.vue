@@ -140,6 +140,39 @@ $miniphones-media: 320px
 	bottom: 0px
 	&.open
 		float: bottom
+	@include normal-width
+		bottom: 2%
+	@include small-width
+		bottom: 2%
+	@include pc-width
+		bottom: 2%
+	@include pad-width
+		bottom: 2%
+	@include pads-width
+		bottom: 2%
+	@include phone-width
+		bottom: 2%
+	
+
+#icon-tag .img-block
+	@include pads-width
+		img
+			width: 15px
+
+		.small
+			display: none
+			font-size: 16px
+	@include phone-width
+		h6
+			display: none
+	@include miniphone-width
+		img
+			width: 10px
+		h6
+			display: none
+		.small
+			font-size: 10px
+
 
 
 #nav
@@ -160,24 +193,27 @@ $miniphones-media: 320px
 		display: inline-block
 
 	@include large-width
-
 		width: 25%
 
 		&.open
 			top: 25%
 			left: 50%
 			transform: translateX(-50%)
-			z-index: 10000
-
+			z-index: 9999
+		&.calendar-show
+			left: 25%
 
 	@include mid-width
 		width: 30%
+		left: 0
 
 		&.open
 			top: 25%
 			left: 50%
 			transform: translateX(-50%)
-			z-index: 10000
+			z-index: 9999
+		&.calendar-show
+			left: 20%
 
 	@include normal-width
 		width: 30%
@@ -186,7 +222,9 @@ $miniphones-media: 320px
 			top: 25%
 			left: 50%
 			transform: translateX(-50%)
-			z-index: 10000
+			z-index: 9999
+		&.calendar-show
+			left: 35%
 
 	@include small-width
 		width: 35%
@@ -195,20 +233,23 @@ $miniphones-media: 320px
 			top: 25%
 			left: 50%
 			transform: translateX(-50%)
-			z-index: 10000
+			z-index: 9999
+
+		&.calendar-show
+			left: 35%
 
 	@include pc-width
 		width: 40%
 
 		&.open
-			top: 20%
+			top: 30%
 			left: 50%
 			transform: translateX(-50%)
-			z-index: 10000
+			z-index: 9999
 
 		&.calendar-show
-			left: 5%
-			width: 50%
+			left: 35%
+
 	@include pad-width
 		width: 50%
 
@@ -217,14 +258,23 @@ $miniphones-media: 320px
 			left: 50%
 			transform: translateX(-50%)
 			z-index: 10000
+		&.calendar-show
+			left: 25%
+			transform: translateY(-35%)
+
 	@include pads-width
-		width: 80%
+		width: 70%
 
 		&.open
 			top: 25%
 			left: 50%
 			transform: translateX(-50%)
-			z-index: 10000
+			z-index: 9999
+		
+		&.calendar-show
+			left: 15%
+			transform: translateY(-35%)
+
 	@include phone-width
 		width: 100%
 
@@ -232,7 +282,7 @@ $miniphones-media: 320px
 			top: 5%
 			left: 50%
 			transform: translateX(-50%)
-			z-index: 10000
+			z-index: 9999
 		&.calendar-show
 			display: none
 
@@ -255,226 +305,55 @@ $miniphones-media: 320px
 .cal-container
 	position: absolute
 	background: #fff
+	padding: 2px
+	top: 35%
+	bottom: 10%
+	left: 50%
+	height: 30%
+	transform: translateX(-50%)
+	transition: all .5s
 	z-index: 9999
 
 	&.hide
 		display: none
+	@include large-width
+		width: 15%
+
+	@include mid-width
+		width: 20%
+
+	@include normal-width
+		left: 65%
+		width: 20%
+
+	@include small-width
+		left: 800px
+		width: 300px
+		height: 250px
+
+	@include pc-width
+		top: 40%
+		left: 75%
+		width: 30%
+		height: 250px
+
+	@include pad-width
+		top: 60%
+		width: 40%
+
+	@include pads-width
+		top: 60%
+		width: 30%
 
 	@include phone-width
-		padding: 2px
-		left: 10%
+		left: 50%
 		width: 80%
-		height: 30%
-		bottom: 10%
+		height: 40%
 		top: 30%
 
 	@include miniphone-width
-		padding: 2px
-		left: 5%
 		width: 90%
 		height: 40%
-		bottom: 10%
 		top: 30%
-		top: 30%
-
-// @media screen and (min-width: 1920px)
-
-// 		.cal-container
-// 			background: #fff
-// 			padding: 2px
-// 			width: 15%
-// 			height: 30%
-// 			position: absolute
-// 			bottom: 10%
-// 			right: 30%
-// 			left: 6%
-// 			z-index: 9999
-
-// @media screen and (min-width: 1440px) and (max-width: 1919px)
-// 		// .icon-tag
-// 		// 	left: 50%
-// 		// 	transform: translateX(-50%)
-// 		// 	bottom: 0px
-
-
-// 		.cal-container
-// 			background: #fff
-// 			padding: 2px
-// 			width: 20%
-// 			height: 30%
-// 			position: absolute
-// 			bottom: 5%
-// 			right: 30%
-// 			left: 2%
-// 			z-index: 9999
-
-// @media screen and (min-width: 1025px) and (max-width: 1439px)
-
-
-// 	.icon-tag
-// 		left: 50%
-// 		transform: translateX(-50%)
-// 		bottom: 0px
-
-// 		// &.open
-// 		// 	transform: translateX(0%)
-// 		// 	transition: transform .5s
-
-// 	.cal-container
-// 		background: #fff
-// 		padding: 2px
-// 		width: 20%
-// 		height: 30%
-// 		position: absolute
-// 		bottom: 5%
-// 		right: 30%
-// 		left: 6%
-// 		z-index: 9999
-
-// @media screen and (max-width: 1024px) and (min-width: 960px)
-
-
-	// .MainMap
-	// 	float: bottom
-	// 	width: 100%
-	// 	transition: margin-top .5s
-
-		// &.open
-		// 	margin-top: 50%
-
-// 	.icon-tag
-// 		width: 100%
-// 		text-align: center
-// 		bottom: 0px
-
-// 	.cal-container
-// 		position: absolute
-// 		width: 40%
-// 		bottom: 5%
-// 		top: 10%
-// 		// right: 20%
-// 		left: 58%
-// 		z-index:  10000
-
-// @media screen and (max-width: 960px) and (min-width: 761px)
-
-	// .MainMap
-	// 	float: bottom
-	// 	width: 100%
-	// 	transition: margin-top .5s
-
-	// 	&.open
-	// 		margin-top: calc(75% - 8vw)
-
-// 	.icon-tag
-// 		right: 0
-// 		text-align: center
-// 		width: 100%
-// 		height: 2%
-// 		// transform: translateX(-100%)
-
-// 	.cal-container
-// 		position: absolute
-// 		width: 35%
-// 		bottom: 5%
-// 		top: 10%
-// 		right: 30%
-// 		left: 60%
-// 		z-index:  10000
-
-// @media screen and (max-width: 760px) and (min-width: 641px)
-
-	// .MainMap
-	// 	float: bottom
-	// 	width: 100%
-	// 	transition: margin-top .5s
-
-	// 	&.open
-	// 		margin-top: 80%
-
-// 	.icon-tag
-// 		right: 50
-// 		text-align: left
-// 		width: 80%
-// 	// transform: translateX(-100%)
-
-// 	.cal-container
-// 		position: absolute
-// 		bottom: 5%
-// 		top: 10%
-// 		right: 30%
-// 		left: 60%
-
-// @media screen and (max-width: 640px) and (min-width: 501px)
-
-
-	// .MainMap
-	// 	float: bottom
-	// 	width: 100%
-	// 	transition: margin-top .5s
-
-	// 	&.open
-	// 		margin-top: 100%
-
-// 	.cal-container
-// 		position: absolute
-// 		bottom: 5%
-// 		top: 10%
-// 		right: 30%
-// 		left: 60%
-
-// @media screen and (max-width: 500px) and (min-width: 401px)
-
-// 	.icon-tag
-// 		bottom: 60px
-// 		right: 0
-// 		width: 43%
-// 		height: 10%
-
-// 	#icon-tag .img-block
-// 		img
-// 			width: 15px
-
-// 		.small
-// 			font-size: 16px
-
-// 	.cal-container
-// 		position: absolute
-// 		bottom: 5%
-// 		top: 10%
-// 		right: 30%
-// 		left: 60%
-
-// @media screen and (max-width: 400px) and (min-width: 321px)
-
-
-// 	.icon-tag
-// 		bottom: 10px
-// 		right: 0
-// 		width: 55%
-// 		height: 10%
-
-// 	.cal-container
-// 		position: absolute
-// 		bottom: 5%
-// 		top: 10%
-// 		right: 30%
-// 		left: 60%
-
-// @media screen and (max-width: 320px)
-
-
-	// .icon-tag
-	// 	bottom: 10px
-	// 	right: 0
-	// 	width: 60%
-	// 	height: 10%
-
-	// .cal-container
-	// 	position: absolute
-	// 	bottom: 5%
-	// 	top: 10%
-	// 	right: 30%
-	// 	left: 60%
-
+		
 </style>

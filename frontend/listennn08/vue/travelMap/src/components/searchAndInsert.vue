@@ -24,8 +24,8 @@
 						date-picker#sdate.date.form-group(v-model="date" format="YYYY/MM/DD" v-show="selectSearchType!='mw_qrycnt03.php'")
 						date-picker#sdate.date.form-group(v-model="date" type="month" format="YYYY/MM" v-show="selectSearchType=='mw_qrycnt03.php'")
 						br
-						button(@click="submit('search')").form-control.btn.btn-outline-primary.offset-md-1.col-md-5 查詢
-						button(@click="collapse()").form-control.btn.btn-outline-danger.col-md-5 取消
+						button(@click="submit('search')").form-control.btn.btn-outline-primary.offset-md-1.offset-sm-1.col-md-5.col-sm-5 查詢
+						button(@click="collapse()").form-control.btn.btn-outline-danger.col-md-5.col-sm-5 取消
 						.result
 				#insert.tab-pane.fade
 					.form-group
@@ -53,10 +53,10 @@
 						br
 						date-picker#date.date.form-group(v-model="date" format="YYYY/MM/DD")
 						br
-						button(@click="submit('insert')").form-control.btn.btn-outline-primary.offset-md-1.col-md-5 新增
-						button(@click="cancel()").form-control.btn.btn-outline-danger.col-md-5 取消
+						button(@click="submit('insert')").form-control.btn.btn-outline-primary.offset-md-1offset-sm-1.col-md-5.col-sm-5 新增
+						button(@click="cancel()").form-control.btn.btn-outline-danger.col-md-5.col-sm-5 取消
 						.result
-				.marked.offset-md-6.offset-sm-9.col-md-7.col-sm-8
+				.marked.offset-md-6.offset-sm-8.col-md-7.col-sm-8
 					h6 景點資料來源:
 						a(href="https://data.gov.tw/dataset/7777") 觀光局
 		//- calendar(:cur="date" :dayOfPeople="monthPeopleCount" v-if="monthPeopleCount.length>0")

@@ -1,5 +1,6 @@
 <template lang="pug">
 	#calendar.cal-container
+		.top-div: button.btn-small.btn-outline-dark(@click="collapse") X
 		.calendar
 			.header
 				button(@click="changeMonth('prev')") &lt;&lt;
@@ -42,6 +43,19 @@
 	@mixin phone-width()
 		@media (max-width: $phones-media)
 			@content
+	.cal-container
+		& .top-div
+			position: fixed
+			width: 25
+			top: 0
+			right: 0
+			left: 90%
+			// left: inherit
+			padding: 1%
+			// button
+			// 	background: none
+			// 	outline: 0
+
 	.calendar
 		width: 100%
 		height: 100%
@@ -98,6 +112,7 @@
 </style>
 <script>
 import { addMonths, isLeapYear, startOfMonth} from 'date-fns';
+import jQuery from 'jquery';
 export default {
 	data() {
 		return {
@@ -152,7 +167,6 @@ export default {
 			dates = startDay.concat(dates)
 			if (this.dayOfPeople.length > 0) {
 				return dates.map( (el) => {
-					console.log(el)
 					return {
 						d: el,
 						c: this.getColor(this.dayOfPeople[el-1])
@@ -178,6 +192,10 @@ export default {
 								: num > 10000
 									? 'yellow'
 									: 'green';
+		},
+		collapse() {
+			jQuery('#calendar').toggleClass('hide')
+			jQuery('#searchAndInsert').toggleClass('calendar-show')
 		}
 	}
 }
