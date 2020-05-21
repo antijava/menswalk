@@ -22,7 +22,7 @@
 	$phone-media: 480px
 	$phones-media: 479px
 	@mixin large-width()
-		@media (min-width:$large-screen) 
+		@media (min-width:$large-screen)
 			@content
 	@mixin mid-width()
 		@media (min-width:$mid-screen) and (max-width:$larges-screen)
@@ -43,30 +43,15 @@
 		@media (max-width: $phones-media)
 			@content
 	.calendar
-		@include large-width
-			width: 370px
-			margin-left: 15%
-			margin-top: 2%
-		@include mid-width
-			width: 360px
-			margin-left: 5%
-			margin-top: 1%
-		@include normal-width
-			width: 365px
-			margin-left: 0
-			margin-top: 2%
-		@include pc-width
-			width: 310px
-		@include pad-width
-		@include pads-width
-		@include phone-width
+		width: 100%
+		height: 100%
 		border: 1px solid #ddddff
 		text-align: center
 		display: grid
 		grid-template-columns: repeat(7, 1fr)
 		justify-content: center
 		transition: all .5s
-		
+
 
 		.header
 			grid-column: 1 / span 7
@@ -77,17 +62,29 @@
 		button:hover
 			border: 1px solid #fdf
 		.label
-			display: inline-block
+			// display: inline-block
 			// margin-left: 4%
 			// margin-right: 4%
 		.day
-			margin: 1px
+			// margin: 1px
 			text-align: center
-			width: 50px
-			height: 40px
+			width: 100%
+			height: 100%
 			@include pc-width
 				margin: .5px
-				width: 40px
+				width: 100%
+				height: 100%
+			@include pad-width
+				margin: .5px
+				width: 100%
+				height: 100%
+			@include pads-width
+				margin: .3px
+				width: 100%
+				height: 100%
+			@include phone-width
+				width: 100%
+				height: 100%
 		.day.purple
 			background-color: #800060
 		.day.red
@@ -147,8 +144,8 @@ export default {
 			}
 		},
 		getDates() {
-			let dayLength = isLeapYear(this.curr) && this.cal.month == 2 
-				? this.days[this.cal.month] +1 
+			let dayLength = isLeapYear(this.curr) && this.cal.month == 2
+				? this.days[this.cal.month] +1
 				: this.days[this.cal.month]
 			let dates = Array.from({length: dayLength}, (_, i) => i+1);
 			let startDay = new Array(startOfMonth(this.curr).getDay()).fill('');

@@ -1,9 +1,7 @@
 <template lang="pug">
 	#searchAndInsert.searchAndInsert
-		.marked.mt-2.float-right(v-if="!showMark")
-			div 景點資料來源:
-				a(href="https://data.gov.tw/dataset/7777") 觀光局
-		.main.col-md-11.col-sm.card.mt-5
+		.main.col.card
+			.top-div.fixed-top.pull-right: button.btn.btn-danger(@click="collapse") X
 			ul.nav.nav-tabs(role="tablist")
 				li.nav-item: a#searchTab.nav-link.active(data-toggle="tab" href="#search" role="tab" aria-controls="#search" aria-selected="false") 查詢
 				li.nav-item.active: a#insertTab.nav-link(data-toggle="tab" href="#insert" role="tab" aria-controls="#insert" aria-selected="false") 新增
@@ -58,10 +56,10 @@
 						button(@click="submit('insert')").form-control.btn.btn-outline-primary.offset-md-1.col-md-5 新增
 						button(@click="cancel()").form-control.btn.btn-outline-danger.col-md-5 取消
 						.result
-				.marked.offset-md-6.offset-sm-9.col-md-7.col-sm-8(v-if="showMark")
+				.marked.offset-md-6.offset-sm-9.col-md-7.col-sm-8
 					h6 景點資料來源:
 						a(href="https://data.gov.tw/dataset/7777") 觀光局
-		calendar(:cur="date" :dayOfPeople="monthPeopleCount" v-if="monthPeopleCount.length>0")
+		//- calendar(:cur="date" :dayOfPeople="monthPeopleCount" v-if="monthPeopleCount.length>0")
 </template>
 <script>
 import "bootstrap";
@@ -242,19 +240,22 @@ export default {
 			// console.log(this.selectSight)
 		},
 		async selectCounty() {
+			let { urls, apikey } = this.connectObj;
 			this.selectSight = null;
 			// this.selectInsertSights = null;
 			// console.log(this.selectCounty);
-			let url = `${ this.connectObj.urls }mw_qryspt02.php?apikey=${ this.connectObj.apikey }&region=${ this.selectCounty }`;
+			let url = `${ urls }mw_qryspt02.php?apikey=${ apikey }&region=${ this.selectCounty }`;
+			// let url = `${ this.connectObj.urls }mw_qryspt02.php?apikey=${ this.connectObj.apikey }&region=${ this.selectCounty }`;
 			url = `${ this.connectObj.cors }${ url }` /* test url */
 			if (this.selectCounty) this.sightsOptions = await axios
 						.get(url)
 						.then(result => result.data)
 						.then(async data => {
 							return await data.map( (el) => {
+								const {i, n } = el;
 								return {
-									Id: el.i,
-									Name: el.n
+									Id: i,
+									Name: n
 								}
 							})
 						})
@@ -359,9 +360,10 @@ export default {
 					.then(data => data.forEach(el=> {
 						this.monthPeopleCount.push(el.c);
 					}));
-				
+				this.$emit('calendarData', this.monthPeopleCount);
+				jQuery('#searchAndInsert').toggleClass('calendar-show');
 			}
-			
+
 		},
 		insertApi() {
 			let url = this.connectObj.urls;
@@ -445,8 +447,6 @@ export default {
 			}
 			if (this.selectSearchType != 'mw_qrycnt03.php') {
 				this.collapse();
-			}  else {
-				//TODO: add show calendar
 			}
 		},
 		cancel() {
@@ -469,38 +469,9 @@ export default {
 			outline: 0
 			&:focus
 				outline: 0
-	$large-screen: 1920px
-	$larges-screen: 1919px
-	$mid-screen: 1440px
-	$mids-screen: 1439px
-	$normal-screen: 1280px
-	$normals-screen: 1279px
-	$pc-media: 960px
-	$pcs-media: 959px
-	$pad-media: 760px
-	$pads-media: 759px
-	$phone-media: 480px
-	$phones-media: 479px
-	@mixin large-width()
-		@media (min-width:$large-screen) 
-			@content
-	@mixin mid-width()
-		@media (min-width:$mid-screen) and (max-width:$larges-screen)
-			@content
-	@mixin normal-width()
-		@media (min-width:$normal-screen) and (max-width: $mids-screen)
-			@content
-	@mixin pc-width()
-		@media (min-width:$pc-media) and (max-width: $normals-screen)
-			@content
-	@mixin pad-width()
-		@media (min-width:$pad-media) and (max-width: $pcs-media)
-			@content
-	@mixin pads-width()
-		@media (min-width:$phone-media) and (max-width: $pads-media)
-			@content
-	@mixin phone-width()
-		@media (max-width: $phones-media)
-			@content
-	
+	.searchAndInsert
+		& .top-div
+			left: inherit
+			padding: 1%
+			right: 1%
 </style>
