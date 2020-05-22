@@ -294,7 +294,8 @@ $miniphones-media: 320px
 
 .MainMap
 	position: relative
-	z-index: -1
+	&.open
+		z-index: -1
 
 .cal-container
 	position: absolute
