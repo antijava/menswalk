@@ -1,10 +1,22 @@
 <template>
-    <div id="app">
-        <icon-tag />
-        <nav-Component :collapse="collapseFn" />
-        <search-and-insert @returnMapData="getMapData" :collapse="collapseFn" />
-        <main-map :passdata="mapData" />
-    </div>
+	<div id="app">
+		<icon-tag />
+		<nav-Component
+			:collapse="collapseFn" />
+		<search-and-insert
+			@returnMapData="getMapData"
+			@calendarData="getCalendarData"
+			@date="getCalendarChangeDate"
+			:datec="date"
+			:collapse="collapseFn" />
+		<calendar
+			:cur="date"
+			@date="getCalendarChangeDate"
+			:dayOfPeople="dayOfPeople"
+			v-if="dayOfPeople.length>0" />
+		<main-map
+			:passdata="mapData" />
+	</div>
 </template>
 
 <script>
@@ -12,281 +24,330 @@ import MainMap from './components/MainMap'
 import SearchAndInsert from './components/searchAndInsert'
 import navComponent from './components/nav'
 import IconTag from './components/IconTag'
-
+import calendar from './components/calendar'
 import jQuery from 'jquery';
 import "bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
 
 export default {
-    name: 'App',
-    components: {
-        IconTag,
-        navComponent,
-        MainMap,
-        SearchAndInsert,
-    },
-    data () {
-        return {
-            mapData: {},
-            collapseFn: null,
-        }
-    },
-    computed: {
-        getWindowWidth() {
+	name: 'App',
+	components: {
+		calendar,
+		IconTag,
+		navComponent,
+		MainMap,
+		SearchAndInsert,
+	},
+	data () {
+		return {
+			mapData: {},
+			dayOfPeople: [],
+			date: new Date(),
+			collapseFn: null,
+		}
+	},
+	created() {
+		this.collapseFn = this.collapse;
+		let curpath = window.location.href;
+		// let curpath = 'http://menswalk.prjlife.com/listennn08.html'
 
-        }
-    },
-    created() {
-        this.collapseFn = this.collapse;
-        let curpath = window.location.href;
-        // let curpath = 'http://menswalk.prjlife.com/listennn08.html'
+		/** auto redirect url path to https */
+		let href = !~curpath.indexOf('localhost')
+			? !~curpath.indexOf('https')
+				? curpath.replace(/http/,' https')
+				: ''
+			: '';
 
-        let href = !~curpath.indexOf('localhost')
-            ? !~curpath.indexOf('https')
-                ? curpath.replace(/http/,' https')
-                : ''
-            : '';
-    
-        if (href) window.location.href = href;
-    },
-    methods: {
-        getMapData() {
-            this.mapData = arguments[0];
-        },
-        collapse() {
-            jQuery('#searchAndInsert').toggleClass('open');
-            jQuery('#map').toggleClass('open');
-            jQuery('#icon-tag').toggleClass('open');
-        }
-    }
+		if (href) window.location.href = href;
+	},
+	methods: {
+		getMapData() {
+			this.mapData = arguments[0];
+		},
+		getCalendarData() {
+			this.dayOfPeople = arguments[0];
+		},
+		getCalendarChangeDate() {
+			this.date = arguments[0];
+		},
+		collapse() {
+			jQuery('#searchAndInsert').toggleClass('open');
+			jQuery('#map').toggleClass('open');
+			jQuery('#icon-tag').toggleClass('open');
+			if (jQuery('#searchAndInsert').hasClass('calendar-show')) {
+				jQuery('#searchAndInsert').toggleClass('calendar-show');
+				jQuery('#calendar').toggleClass('hide');
+			}
+
+		}
+	}
 }
 </script>
 
-<style>
-@import url("https://fonts.googleapis.com/css?family=Noto+Sans+TC:100,300,400,500,700,900&display=swap");
+<style lang="sass" scope>
+@import url("https://fonts.googleapis.com/css?family=Noto+Sans+TC:100,300,400,500,700,900&display=swap")
+$large-screen: 1920px
+$larges-screen: 1919px
+$mid-screen: 1440px
+$mids-screen: 1439px
+$normal-screen: 1280px
+$normals-screen: 1279px
+$small-screen: 1025px
+$smalls-screen: 1024px
+$pc-media: 960px
+$pcs-media: 959px
+$pad-media: 760px
+$pads-media: 759px
+$phone-media: 480px
+$phones-media: 479px
+$miniphone-media: 321px
+$miniphones-media: 320px
+@mixin large-width()
+	@media (min-width:$large-screen)
+		@content
+@mixin mid-width()
+	@media (min-width:$mid-screen) and (max-width:$larges-screen)
+		@content
+@mixin normal-width()
+	@media (min-width:$normal-screen) and (max-width: $mids-screen)
+		@content
+@mixin small-width()
+	@media (min-width: $small-screen) and (max-width: $normals-screen)
+		@content
+@mixin pc-width()
+	@media (min-width:$pc-media) and (max-width: $smalls-screen)
+		@content
+@mixin pad-width()
+	@media (min-width:$pad-media) and (max-width: $pcs-media)
+		@content
+@mixin pads-width()
+	@media (min-width:$phone-media) and (max-width: $pads-media)
+		@content
+@mixin phone-width()
+	@media (min-width: $miniphone-media) and (max-width: $phones-media)
+		@content
+@mixin miniphone-width()
+	@media (max-width: $miniphones-media)
+		@content
+*
+	padding: 0
+	margin: 0
 
-@media screen and (min-width: 1025px) {
-    .searchAndInsert {
-        float: left;
-        left: 5%;
-        width: 0;
-        transition: width .5s;
-    }
-    .searchAndInsert.open {
-        width: 30%;
-    }
-    .MainMap {
-        float: right;
-        width: 100%;
-        height: 100%;
-        transition: width .5s;
-    }
-    .MainMap.open {
-        width: 60%;
+#app
+	font-family: 'Noto Sans TC', 'Avenir', Helvetica, Arial, sans-serif
+	-webkit-font-smoothing: antialiased
+	-moz-osx-font-smoothing: grayscale
+	width: 100vw
+	height: 100vh
+	color: #2c3e50
 
-    }
-    .icon-tag {
-        left: 50%;
-        transform: translateX(-50%);
-    }
-    .icon-tag.open {
-        transform: translateX(50%);
-        transition: transform .5s;
-    }
-}
-@media screen and (max-width: 1024px) and (min-width: 960px) {
-    .searchAndInsert {
-        float: top;
-        top: 2%;
-        left: 20%;
-        width: 60%;
-        height: 0;
-        transition: height .5s;
-    }
-    .searchAndInsert.open {
-        height: 70%;
-    }
-    .MainMap {
-        float: bottom;
-        width: 100%;
-        transition: margin-top .5s;
-    }
-    .MainMap.open {
-        margin-top: 50%;
-    }
-    .icon-tag {
-        width: 100%;
-        text-align: center;
-    }
-}
-@media screen and (max-width: 960px) and (min-width: 761px) {
-     .searchAndInsert {
-        float: top;
-        top: 1%;
-        left: 20%;
-        width: 60%;
-        height: 0;
-        transition: height .5s;
-    }
-    .searchAndInsert.open {
-        height: 70%;
-    }
-    .MainMap {
-        float: bottom;
-        width: 100%;
-        transition: margin-top .5s;
-    }
-    .MainMap.open {
-        margin-top: calc(75% - 8vw);
-    }
-    .icon-tag {
-        right: 0;
-        text-align: center;
-        width: 100%;
-        height: 2%;
-        /* transform: translateX(-100%); */
-    }
-}
-@media screen and (max-width: 760px) and (min-width: 641px){
-     .searchAndInsert {
-        float: top;
-        top: 1%;
-        left: 20%;
-        width: 60%;
-        height: 0;
-        transition: height .5s;
-    }
-    .searchAndInsert.open {
-        height: 90%;
-    }
-    .MainMap {
-        float: bottom;
-        width: 100%;
-        transition: margin-top .5s;
-    }
-    .MainMap.open {
-        margin-top: 80%;
-    }
-    .icon-tag {
-        right: 50;
-        text-align: left;
-        width: 80%;
-        /* transform: translateX(-100%); */
-    }
-}
-@media screen and (max-width: 640px) and (min-width: 501px) {
-     .searchAndInsert {
-        float: top;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 0;
-        transition: height .5s;
-    }
-    .searchAndInsert.open {
-        height: 70%;
-    }
-    .MainMap {
-        float: bottom;
-        width: 100%;
-        transition: margin-top .5s;
-    }
-    .MainMap.open {
-        margin-top: 100% ;
-    }
-}
-@media screen and (max-width: 500px) and (min-width: 401px) {
-    .searchAndInsert.open {
-        height: 70%;
-    }
-    .MainMap.open {
-        margin-top: 120% ;
-    }
-    .icon-tag {
-        bottom: 60px;
-        right: 0;
-        width: 43%;
-        height: 10%;
-    }
-    #icon-tag .img-block img {
-        width: 15px;
-    }
-    #icon-tag .img-block .small  {
-        font-size: 16px;
-    }
-}
-@media screen and (max-width: 400px) and (min-width: 321px) {
-    .searchAndInsert {
-        float: top;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 0;
-        transition: height .5s;
-    }
-    .searchAndInsert.open {
-        height: 80%;
-    }
-    .MainMap.open {
-        margin-top: 135% ;
-    }
-    .icon-tag {
-        bottom: 10px;
-        right: 0;
-        width: 55%;
-        height: 10%;
-    }
-}
-@media screen and (max-width: 320px) {
-    .searchAndInsert {
-        float: top;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 0;
-        transition: height .5s;
-    }
-    .searchAndInsert.open {
-        height: 90%;
-    }
-    .MainMap.open {
-        margin-top: 150% ;
-    }
-    .icon-tag {
-        bottom: 10px;
-        right: 0;
-        width: 60%;
-        height: 10%;
-    }
-}
-* {
-    padding: 0;
-    margin: 0;
-}
-#app {
-    font-family: 'Noto Sans TC', 'Avenir', Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    width: 100vw;
-    height: 100vh;
-    color: #2c3e50;
-}
-.icon-tag {
-    position: fixed;
-    z-index: 9999;
-    transition: transform .5s;
-}
+.icon-tag
+	position: absolute
+	z-index: 9999
+	transition: all .5s
+	width: 100%
+	text-align: center
+	bottom: 0px
+	&.open
+		float: bottom
+	@include normal-width
+		bottom: 2%
+	@include small-width
+		bottom: 2%
+	@include pc-width
+		bottom: 2%
+	@include pad-width
+		bottom: 2%
+	@include pads-width
+		bottom: 2%
+	@include phone-width
+		bottom: 2%
 
-#nav {
-    position: fixed;
-    z-index: 9999;
-    top: 0;
-}
-.searchAndInsert {
-    overflow: hidden;
-    position: absolute;
-}
-.MainMap {
-    position: relative;
-}
+
+#icon-tag .img-block
+	@include pads-width
+		img
+			width: 15px
+
+		.small
+			display: none
+			font-size: 16px
+	@include phone-width
+		h6
+			display: none
+	@include miniphone-width
+		img
+			width: 10px
+		h6
+			display: none
+		.small
+			font-size: 10px
+
+
+
+#nav
+	position: fixed
+	z-index: 9999
+	top: 0
+
+.searchAndInsert
+	float: left
+	overflow: hidden
+	position: absolute
+	transition: all .5s
+	top: 20%
+	transform: translateX(-100%)
+	z-index: 1
+	& .top-div
+		display: none
+
+	&.open .top-div
+		display: inline-block
+
+	@include large-width
+		width: 25%
+
+		&.open
+			transform: translateX(150%)
+
+		&.calendar-show
+			transform: translateX(50%)
+
+
+	@include mid-width
+		width: 30%
+
+		&.open
+			transform: translateX(150%)
+
+		&.calendar-show
+			transform: translateX(50%)
+
+	@include normal-width
+		width: 30%
+
+		&.open
+			transform: translateX(150%)
+
+		&.calendar-show
+			transform: translateX(50%)
+	@include small-width
+		width: 35%
+
+		&.open
+			transform: translateX(150%)
+
+		&.calendar-show
+			transform: translateX(50%)
+
+	@include pc-width
+		width: 40%
+
+		&.open
+			transform: translateX(150%)
+
+		&.calendar-show
+			left: 150px
+			transform: translateY(25%)
+
+	@include pad-width
+		width: 50%
+
+		&.open
+			transform: translateX(150%)
+
+		&.calendar-show
+			left: 200px
+			transform: translateY(-35%)
+
+	@include pads-width
+		width: 70%
+
+		&.open
+			transform: translateX(150%)
+
+		&.calendar-show
+			transform: translateX(50%)
+			transform: translateY(-35%)
+
+	@include phone-width
+		width: 100%
+		top: 5%
+
+		&.open
+			top: 5%
+			transform: translateX(0%)
+
+		&.calendar-show
+			display: none
+
+	@include miniphone-width
+		width: 100%
+		top: 5%
+
+		&.open
+			top: 5%
+			transform: translateX(0%)
+
+		&.calendar-show
+			display: none
+
+.MainMap
+	position: relative
+	z-index: -1
+
+.cal-container
+	position: absolute
+	background: #fff
+	padding: 2px
+	top: 35%
+	bottom: 10%
+	left: 50%
+	height: 30%
+	transform: translateX(-50%)
+	transition: all .5s
+	z-index: 3
+
+	&.hide
+		display: none
+	@include large-width
+		width: 15%
+
+	@include mid-width
+		width: 20%
+
+	@include normal-width
+		left: 65%
+		width: 20%
+
+	@include small-width
+		left: 800px
+		width: 300px
+		height: 250px
+
+	@include pc-width
+		top: 40%
+		left: 75%
+		width: 30%
+		height: 250px
+
+	@include pad-width
+		top: 50%
+		width: 40%
+
+	@include pads-width
+		top: 50%
+		width: 40%
+
+	@include phone-width
+		left: 50%
+		width: 80%
+		height: 40%
+		top: 30%
+
+	@include miniphone-width
+		width: 90%
+		height: 40%
+		top: 30%
+
 </style>
