@@ -1,10 +1,21 @@
 <template>
 	<div id="app">
 		<icon-tag />
-		<nav-Component :collapse="collapseFn" />
-		<search-and-insert @returnMapData="getMapData" :collapse="collapseFn" @calendarData="getCalendarData"/>
-		<calendar :cur="date" :dayOfPeople="dayOfPeople" v-if="dayOfPeople.length>0" />
-		<main-map :passdata="mapData" />
+		<nav-Component
+			:collapse="collapseFn" />
+		<search-and-insert
+			@returnMapData="getMapData"
+			@calendarData="getCalendarData"
+			@date="getCalendarChangeDate"
+			:datec="date"
+			:collapse="collapseFn" />
+		<calendar
+			:cur="date"
+			@date="getCalendarChangeDate"
+			:dayOfPeople="dayOfPeople"
+			v-if="dayOfPeople.length>0" />
+		<main-map
+			:passdata="mapData" />
 	</div>
 </template>
 
@@ -35,16 +46,12 @@ export default {
 			collapseFn: null,
 		}
 	},
-	computed: {
-		getWindowWidth() {
-
-		}
-	},
 	created() {
 		this.collapseFn = this.collapse;
 		let curpath = window.location.href;
 		// let curpath = 'http://menswalk.prjlife.com/listennn08.html'
 
+		/** auto redirect url path to https */
 		let href = !~curpath.indexOf('localhost')
 			? !~curpath.indexOf('https')
 				? curpath.replace(/http/,' https')
@@ -59,6 +66,9 @@ export default {
 		},
 		getCalendarData() {
 			this.dayOfPeople = arguments[0];
+		},
+		getCalendarChangeDate() {
+			this.date = arguments[0];
 		},
 		collapse() {
 			jQuery('#searchAndInsert').toggleClass('open');
@@ -152,7 +162,7 @@ $miniphones-media: 320px
 		bottom: 2%
 	@include phone-width
 		bottom: 2%
-	
+
 
 #icon-tag .img-block
 	@include pads-width
@@ -185,7 +195,9 @@ $miniphones-media: 320px
 	overflow: hidden
 	position: absolute
 	transition: all .5s
-
+	top: 20%
+	transform: translateX(-100%)
+	z-index: 1
 	& .top-div
 		display: none
 
@@ -196,111 +208,93 @@ $miniphones-media: 320px
 		width: 25%
 
 		&.open
-			top: 25%
-			left: 50%
-			transform: translateX(-50%)
-			z-index: 9999
+			transform: translateX(150%)
+
 		&.calendar-show
-			left: 25%
+			transform: translateX(50%)
+
 
 	@include mid-width
 		width: 30%
-		left: 0
 
 		&.open
-			top: 25%
-			left: 50%
-			transform: translateX(-50%)
-			z-index: 9999
+			transform: translateX(150%)
+
 		&.calendar-show
-			left: 20%
+			transform: translateX(50%)
 
 	@include normal-width
 		width: 30%
 
 		&.open
-			top: 25%
-			left: 50%
-			transform: translateX(-50%)
-			z-index: 9999
-		&.calendar-show
-			left: 35%
+			transform: translateX(150%)
 
+		&.calendar-show
+			transform: translateX(50%)
 	@include small-width
 		width: 35%
 
 		&.open
-			top: 25%
-			left: 50%
-			transform: translateX(-50%)
-			z-index: 9999
+			transform: translateX(150%)
 
 		&.calendar-show
-			left: 35%
+			transform: translateX(50%)
 
 	@include pc-width
 		width: 40%
 
 		&.open
-			top: 30%
-			left: 50%
-			transform: translateX(-50%)
-			z-index: 9999
+			transform: translateX(150%)
 
 		&.calendar-show
-			left: 35%
+			left: 150px
+			transform: translateY(25%)
 
 	@include pad-width
 		width: 50%
 
 		&.open
-			top: 25%
-			left: 50%
-			transform: translateX(-50%)
-			z-index: 10000
+			transform: translateX(150%)
+
 		&.calendar-show
-			left: 25%
+			left: 200px
 			transform: translateY(-35%)
 
 	@include pads-width
 		width: 70%
 
 		&.open
-			top: 25%
-			left: 50%
-			transform: translateX(-50%)
-			z-index: 9999
-		
+			transform: translateX(150%)
+
 		&.calendar-show
-			left: 15%
+			transform: translateX(50%)
 			transform: translateY(-35%)
 
 	@include phone-width
 		width: 100%
+		top: 5%
 
 		&.open
 			top: 5%
-			left: 50%
-			transform: translateX(-50%)
-			z-index: 9999
+			transform: translateX(0%)
+
 		&.calendar-show
 			display: none
 
 	@include miniphone-width
-		float: left
-		left: 7%
 		width: 100%
+		top: 5%
 
 		&.open
-			top: 25%
-			left: 50%
-			transform: translateX(-50%)
-			z-index: 10000
+			top: 5%
+			transform: translateX(0%)
+
 		&.calendar-show
 			display: none
 
 .MainMap
 	position: relative
+	z-index: -1
 
 .cal-container
 	position: absolute
@@ -312,7 +306,7 @@ $miniphones-media: 320px
 	height: 30%
 	transform: translateX(-50%)
 	transition: all .5s
-	z-index: 9999
+	z-index: 3
 
 	&.hide
 		display: none
@@ -338,12 +332,12 @@ $miniphones-media: 320px
 		height: 250px
 
 	@include pad-width
-		top: 60%
+		top: 50%
 		width: 40%
 
 	@include pads-width
-		top: 60%
-		width: 30%
+		top: 50%
+		width: 40%
 
 	@include phone-width
 		left: 50%
@@ -355,5 +349,5 @@ $miniphones-media: 320px
 		width: 90%
 		height: 40%
 		top: 30%
-		
+
 </style>

@@ -76,7 +76,8 @@ import calendar from './calendar';
 
 export default {
 	props: {
-		collapse: Function
+		collapse: Function,
+		datec: Date
 	},
 	data() {
 		return {
@@ -233,8 +234,11 @@ export default {
 		}
 	},
 	watch: {
-		date() {
-			// console.log(moment(this.date).format("YYYY/MM/DD"))
+		datec() {
+			console.log(this.datec);
+			this.date=this.datec;
+			if (this.selectSearchType == 'mw_qrycnt03.php')
+				this.getApi();
 		},
 		selectSight() {
 			// console.log(this.selectSight)
@@ -246,7 +250,7 @@ export default {
 			// console.log(this.selectCounty);
 			let url = `${ urls }mw_qryspt02.php?apikey=${ apikey }&region=${ this.selectCounty }`;
 			// let url = `${ this.connectObj.urls }mw_qryspt02.php?apikey=${ this.connectObj.apikey }&region=${ this.selectCounty }`;
-			url = `${ this.connectObj.cors }${ url }` /* test url */
+			// url = `${ this.connectObj.cors }${ url }` /* test url */
 			if (this.selectCounty) this.sightsOptions = await axios
 						.get(url)
 						.then(result => result.data)
@@ -263,7 +267,6 @@ export default {
 		selectInsertSights() {
 			// console.log(this.selectInsertSights.map(el => el.Id))
 		},
-
 	},
 	components: {
 		DatePicker,
@@ -301,7 +304,7 @@ export default {
 		getApi() {
 			let url = this.connectObj.urls;
 			url = `${url}${this.selectSearchType}?apikey=${this.connectObj.apikey}`;
-			url = `${this.connectObj.cors}${url}` /* test url */
+			// url = `${this.connectObj.cors}${url}` /* test url */
 			switch (this.selectSearchType) {
 				case 'mw_qryspt01.php':
 					this.connectObj.id = this.selectSight;
@@ -328,6 +331,7 @@ export default {
 					break;
 			};
 			// console.log(`${cors}http://menswalk.prjlife.com/${this.selectSearchType}`)
+
 			if (this.selectSearchType != "mw_qrycnt03.php") {
 				axios.get(url)
 					.then((result) => result.data)
@@ -354,6 +358,7 @@ export default {
 						this.$emit('returnMapData', this.passObj);
 					})
 			} else {
+				console.log(url)
 				this.monthPeopleCount=[];
 				axios.get(url)
 					.then(result => result.data)
@@ -361,14 +366,15 @@ export default {
 						this.monthPeopleCount.push(el.c);
 					}));
 				this.$emit('calendarData', this.monthPeopleCount);
-				jQuery('#searchAndInsert').toggleClass('calendar-show');
+				this.$emit('date', this.date);
+				if (!jQuery('#searchAndInsert').hasClass('calendar-show')) jQuery('#searchAndInsert').toggleClass('calendar-show');
 			}
 
 		},
 		insertApi() {
 			let url = this.connectObj.urls;
 			url = `${url}${this.selectSearchType}`
-			url = `${this.connectObj.cors}${url}`; /* test url */
+			// url = `${this.connectObj.cors}${url}`; /* test url */
 			let postFormData = new FormData();
 			postFormData.set('apikey', this.connectObj.apikey);
 			postFormData.set('date', moment(this.date).format('YYYYMMDD'));
@@ -464,11 +470,6 @@ export default {
 		outline: 0
 		&:focus
 			outline: 0
-	date-picker
-		button
-			outline: 0
-			&:focus
-				outline: 0
 	.searchAndInsert
 		& .top-div
 			left: inherit

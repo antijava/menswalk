@@ -111,8 +111,9 @@
 			background-color: #79ff2f
 </style>
 <script>
-import { addMonths, isLeapYear, startOfMonth} from 'date-fns';
+import { addMonths, isLeapYear, startOfMonth, format } from 'date-fns';
 import jQuery from 'jquery';
+import axios from 'axios';
 export default {
 	data() {
 		return {
@@ -157,6 +158,7 @@ export default {
 					this.curr = addMonths(this.curr, 1);
 					break;
 			}
+			this.$emit('date', this.curr);
 		},
 		getDates() {
 			let dayLength = isLeapYear(this.curr) && this.cal.month == 2
@@ -196,7 +198,7 @@ export default {
 		collapse() {
 			jQuery('#calendar').toggleClass('hide')
 			jQuery('#searchAndInsert').toggleClass('calendar-show')
-		}
+		},
 	}
 }
 </script>
